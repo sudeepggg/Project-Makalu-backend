@@ -1,0 +1,25 @@
+export const ORDER_STATUSES = {
+  DRAFT: 'DRAFT',
+  CONFIRMED: 'CONFIRMED',
+  DISPATCHED: 'DISPATCHED',
+  DELIVERED: 'DELIVERED',
+  CANCELLED: 'CANCELLED',
+} as const;
+
+export const PAYMENT_STATUSES = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  REFUNDED: 'REFUNDED',
+} as const;
+
+export const STOCK_MOVEMENT_TYPES = {
+  IN: 'IN',
+  OUT: 'OUT',
+  ADJUSTMENT: 'ADJUSTMENT',
+} as const;
+
+export const USER_ROLES = {
+  ADMIN: 'ADMIN',
+  SALES_STAFF: 'SALES_STAFF',
+} as const;
