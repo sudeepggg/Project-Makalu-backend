@@ -1,16 +1,16 @@
-import express from 'express';
 import cors from 'cors';
+import express from 'express';
 import helmet from 'helmet';
 import { env } from './config/env';
+import { errorHandler } from './middleware/error.middleware';
 import { loggingMiddleware } from './middleware/logging.middleware';
-import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 import { authRoutes } from './modules/auth/auth.routes';
 import { customerRoutes } from './modules/customer/customer.routes';
-import { productRoutes } from './modules/product/product.routes';
-import { pricingRoutes } from './modules/pricing/pricing.routes';
 import { inventoryRoutes } from './modules/inventory/inventory.routes';
 import { orderRoutes } from './modules/order/order.routes';
 import { paymentRoutes } from './modules/payment/payment.routes';
+import { pricingRoutes } from './modules/pricing/pricing.routes';
+import { productRoutes } from './modules/product/product.routes';
 import { reportRoutes } from './modules/report/report.routes';
 
 const app = express();
