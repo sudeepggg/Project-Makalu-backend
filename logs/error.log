@@ -1,0 +1,1 @@
+[2026-04-28T15:03:19.946Z] [ERROR] ❌ Database connection failed: {"name":"PrismaClientInitializationError","clientVersion":"5.22.0","errorCode":"P1000"}
