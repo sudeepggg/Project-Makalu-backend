@@ -1,4 +1,3 @@
-import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 import { env } from './config/env';
@@ -12,6 +11,7 @@ import { paymentRoutes } from './modules/payment/payment.routes';
 import { pricingRoutes } from './modules/pricing/pricing.routes';
 import { productRoutes } from './modules/product/product.routes';
 import { reportRoutes } from './modules/report/report.routes';
+import cors from 'cors';
 
 const app = express();
 

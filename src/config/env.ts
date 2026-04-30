@@ -8,9 +8,9 @@ const envSchema = z.object({
   PORT: z.coerce.number().default(3000),
   DATABASE_URL: z.string().url(),
   JWT_SECRET: z.string().min(32),
-  JWT_EXPIRY: z.string().default('24h'),
+  JWT_EXPIRY: z.enum(['1h', '6h', '12h', '24h', '7d', '30d']).default('24h'),
   LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
-  CORS_ORIGIN: z.string().default('http://localhost:5173'),
+  CORS_ORIGIN: z.string(),
   MAX_REQUEST_SIZE: z.string().default('10mb'),
 });
 
