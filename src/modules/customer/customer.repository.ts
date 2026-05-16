@@ -27,4 +27,12 @@ export const customerRepository = {
   toggleActive(id: string, newState: boolean) {
     return prisma.customer.update({ where: { id }, data: { isActive: newState } });
   },
+
+  // ← added: fetch only the last customer's id for sequence generation
+  findLastId() {
+    return prisma.customer.findFirst({
+      orderBy: { createdAt: 'desc' },
+      select: { id: true },
+    });
+  },
 };
