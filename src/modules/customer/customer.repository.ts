@@ -31,7 +31,7 @@ export const customerRepository = {
   // ← added: fetch only the last customer's id for sequence generation
   findLastId() {
     return prisma.customer.findFirst({
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: 'desc' }, 
       select: { id: true },
     });
   },

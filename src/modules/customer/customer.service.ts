@@ -17,19 +17,27 @@ export const customerService = {
       if (existing) throw new ConflictError("Registration number exists");
     }
 
+    if (input.email) {
+      const emailExists = await prisma.customer.findFirst({
+        where: { email: input.email },
+      });
+      if (emailExists) throw new ConflictError("Email already in use");
+    }
+
+    if (input.phone) {
+      const phoneExists = await prisma.customer.findFirst({
+        where: { phone: input.phone },
+      });
+      if (phoneExists) throw new ConflictError("Phone number already in use");
+    }
+
     const ct = await prisma.customerType.findUnique({
       where: { id: input.customerTypeId },
     });
     if (!ct) throw new NotFoundError("Customer type not found");
 
-    // Auto-generate ID inside a transaction to prevent race conditions
-    const customer = await prisma.$transaction(async (tx) => {
-      const count = await tx.customer.count();
-      const customerId = `CUST-${String(count + 1).padStart(5, "0")}`;
-
-      return tx.customer.create({
-        data: { ...input, id: customerId },
-      });
+    const customer = await prisma.customer.create({
+      data: { ...input },
     });
 
     logger.info("Customer created", { customerId: customer.id });
@@ -79,6 +87,23 @@ export const customerService = {
   async updateCustomer(id: string, input: any) {
     const customer = await prisma.customer.findUnique({ where: { id } });
     if (!customer) throw new NotFoundError("Customer not found");
+
+    // Unique email check (exclude self)
+    if (input.email) {
+      const emailExists = await prisma.customer.findFirst({
+        where: { email: input.email, NOT: { id } },
+      });
+      if (emailExists) throw new ConflictError("Email already in use");
+    }
+
+    // Unique phone check (exclude self)
+    if (input.phone) {
+      const phoneExists = await prisma.customer.findFirst({
+        where: { phone: input.phone, NOT: { id } },
+      });
+      if (phoneExists) throw new ConflictError("Phone number already in use");
+    }
+
     const updated = await prisma.customer.update({
       where: { id },
       data: input,

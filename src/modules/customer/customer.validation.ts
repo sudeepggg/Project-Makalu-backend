@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+const phoneRegex = /^\+?[0-9\s\-().]{7,20}$/;
+
 export const createCustomerSchema = z.object({
   body: z.object({
     name: z.string().min(1).max(100),
@@ -9,8 +11,12 @@ export const createCustomerSchema = z.object({
     email: z.string().email().optional(),
     phone: z
       .string()
-      .regex(/^\+?[0-9\s\-().]{7,20}$/, "Invalid phone number")
+      .regex(phoneRegex, "Invalid phone number")
       .optional(),
+    alternatePhone: z
+      .string()
+      .regex(phoneRegex, "Invalid alternate phone number")
+      .optional().nullable(),
     website: z.string().url("Invalid URL").optional(),
     street: z.string().max(150).optional(),
     city: z.string().max(100).optional(),
