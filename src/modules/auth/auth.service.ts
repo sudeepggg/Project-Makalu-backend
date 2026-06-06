@@ -59,7 +59,7 @@ export const authService = {
         id: user.id,
         username: user.username,
         email: user.email,
-        roles: user.roles.map((r) => r.role.name),
+        roles: user.roles,
       },
       env.JWT_SECRET,
       {
@@ -74,6 +74,7 @@ export const authService = {
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
+        roles: user.roles.map((r) => r.role.name),
       },
       token,
     };
@@ -100,7 +101,7 @@ export const authService = {
         id: user.id,
         username: user.username,
         email: user.email,
-        roles: user.roles.map((r) => r.role.name),
+        roles: user.roles,
       },
       env.JWT_SECRET,
       {
@@ -109,7 +110,12 @@ export const authService = {
     );
 
     return {
-      user: { id: user.id, username: user.username, email: user.email },
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        roles: user.roles.map((r) => r.role.name),
+      },
       token,
     };
   },
