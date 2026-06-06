@@ -1,3 +1,4 @@
+import { STOCK_MOVEMENT_TYPES } from "../../config/constants";
 import { prisma } from "../../config/database";
 import {
   ConflictError,
@@ -7,7 +8,6 @@ import {
 import { logger } from "../../utils/logger";
 
 export const productService = {
-
   async createProduct(input: any) {
     // Validate required fields
     if (!input.sku || !input.name)
@@ -35,16 +35,19 @@ export const productService = {
       // Only pass safe fields — never spread raw input into Prisma
       const product = await tx.product.create({
         data: {
-          sku:             input.sku,
-          name:            input.name,
-          description:     input.description,
-          categoryId:      input.categoryId,
+          sku: input.sku,
+          name: input.name,
+          description: input.description,
+          imageUrl: input.imageUrl,
+          categoryId: input.categoryId,
           unitOfMeasureId: input.unitOfMeasureId,
-          supplierId:      input.supplierId,
-          costPrice:       input.costPrice       ?? 0,
-          basePrice:       input.basePrice       ?? 0,
-          reorderLevel:    input.reorderLevel    ?? 0,
-          isActive:        true,
+          supplierId: input.supplierId,
+          costPrice: input.costPrice ?? 0,
+          basePrice: input.basePrice ?? 0,
+          reorderLevel: input.reorderLevel ?? 0,
+          reorderQuantity: input.reorderQuantity ?? 0,
+          openingStock: input.openingStock ?? 0,
+          isActive: true,
         },
       });
 
@@ -56,11 +59,11 @@ export const productService = {
       if (warehouse) {
         await tx.inventory.create({
           data: {
-            productId:         product.id,
-            warehouseId:       warehouse.id,
-            quantityOnHand:    0,
-            quantityAvailable: 0,
-            quantityReserved:  0,
+            productId: product.id,
+            warehouseId: warehouse.id,
+            quantityOnHand: input.openingStock ?? 0,
+            quantityAvailable: input.openingStock ?? 0,
+            quantityReserved: 0,
           },
         });
         logger.info("Inventory row auto-created", { productId: product.id });
@@ -75,10 +78,10 @@ export const productService = {
     const product = await prisma.product.findUnique({
       where: { id },
       include: {
-        category:     true,
+        category: true,
         unitOfMeasure: true,
-        supplier:     true,
-        inventories:  { include: { warehouse: true } },
+        supplier: true,
+        inventories: { include: { warehouse: true } },
       },
     });
     if (!product) throw new NotFoundError("Product not found");
@@ -86,13 +89,13 @@ export const productService = {
   },
 
   async listProducts(page = 1, limit = 20, filters?: any) {
-    const skip  = (page - 1) * limit;
+    const skip = (page - 1) * limit;
     const where: any = {};
 
     if (filters?.search) {
       where.OR = [
         { name: { contains: filters.search, mode: "insensitive" } },
-        { sku:  { contains: filters.search, mode: "insensitive" } },
+        { sku: { contains: filters.search, mode: "insensitive" } },
       ];
     }
     if (filters?.categoryId) where.categoryId = filters.categoryId;
@@ -105,10 +108,10 @@ export const productService = {
     const [data, total] = await Promise.all([
       prisma.product.findMany({
         where,
-        include:  { category: true, unitOfMeasure: true, supplier: true },
+        include: { category: true, unitOfMeasure: true, supplier: true },
         skip,
-        take:     limit,
-        orderBy:  { createdAt: "desc" },
+        take: limit,
+        orderBy: { createdAt: "desc" },
       }),
       prisma.product.count({ where }),
     ]);
@@ -132,13 +135,17 @@ export const productService = {
     const updated = await prisma.product.update({
       where: { id },
       data: {
-        ...(input.name            && { name:            input.name }),
-        ...(input.description     && { description:     input.description }),
-        ...(input.categoryId      && { categoryId:      input.categoryId }),
-        ...(input.unitOfMeasureId && { unitOfMeasureId: input.unitOfMeasureId }),
-        ...(input.supplierId      && { supplierId:      input.supplierId }),
-        ...(input.costPrice       !== undefined && { costPrice:       input.costPrice }),
-        ...(input.reorderLevel    !== undefined && { reorderLevel:    input.reorderLevel }),
+        ...(input.name && { name: input.name }),
+        ...(input.description && { description: input.description }),
+        ...(input.categoryId && { categoryId: input.categoryId }),
+        ...(input.unitOfMeasureId && {
+          unitOfMeasureId: input.unitOfMeasureId,
+        }),
+        ...(input.supplierId && { supplierId: input.supplierId }),
+        ...(input.costPrice !== undefined && { costPrice: input.costPrice }),
+        ...(input.reorderLevel !== undefined && {
+          reorderLevel: input.reorderLevel,
+        }),
         updatedAt: new Date(),
       },
     });
@@ -151,11 +158,12 @@ export const productService = {
   async deactivateProduct(id: string) {
     const product = await prisma.product.findUnique({ where: { id } });
     if (!product) throw new NotFoundError("Product not found");
-    if (!product.isActive) throw new ValidationError("Product already inactive");
+    if (!product.isActive)
+      throw new ValidationError("Product already inactive");
 
     return prisma.product.update({
       where: { id },
-      data:  { isActive: false, updatedAt: new Date() },
+      data: { isActive: false, updatedAt: new Date() },
     });
   },
 
@@ -167,61 +175,69 @@ export const productService = {
 
     return prisma.product.update({
       where: { id },
-      data:  { isActive: true, updatedAt: new Date() },
+      data: { isActive: true, updatedAt: new Date() },
     });
   },
 
   // In productService — add this method
-async addOpeningStock(productId: string, warehouseId: string, quantity: number) {
-  const product = await prisma.product.findUnique({ where: { id: productId } });
-  if (!product) throw new NotFoundError('Product not found');
-  if (!product.isActive) throw new ValidationError('Cannot add stock to inactive product');
-  if (quantity <= 0) throw new ValidationError('Quantity must be greater than 0');
-
-  return prisma.$transaction(async (tx) => {
-    const inventory = await tx.inventory.upsert({
-      where: { productId_warehouseId: { productId, warehouseId } },
-      create: {
-        productId,
-        warehouseId,
-        quantityOnHand:    quantity,
-        quantityAvailable: quantity,
-        quantityReserved:  0,
-        lastStockCheckDate: new Date(),
-      },
-      update: {
-        quantityOnHand:    { increment: quantity },
-        quantityAvailable: { increment: quantity },
-        lastStockCheckDate: new Date(),
-      },
+  async addOpeningStock(
+    productId: string,
+    warehouseId: string,
+    quantity: number,
+  ) {
+    const product = await prisma.product.findUnique({
+      where: { id: productId },
     });
+    if (!product) throw new NotFoundError("Product not found");
+    if (!product.isActive)
+      throw new ValidationError("Cannot add stock to inactive product");
+    if (quantity <= 0)
+      throw new ValidationError("Quantity must be greater than 0");
 
-    await tx.stockMovement.create({
-      data: {
-        productId,
-        warehouseId,
-        movementType:  STOCK_MOVEMENT_TYPES.IN,
-        quantity,
-        referenceType: 'OPENING_STOCK',
-        notes:         'Opening stock entry',
-      },
+    return prisma.$transaction(async (tx) => {
+      const inventory = await tx.inventory.upsert({
+        where: { productId_warehouseId: { productId, warehouseId } },
+        create: {
+          productId,
+          warehouseId,
+          quantityOnHand: quantity,
+          quantityAvailable: quantity,
+          quantityReserved: 0,
+          lastStockCheckDate: new Date(),
+        },
+        update: {
+          quantityOnHand: { increment: quantity },
+          quantityAvailable: { increment: quantity },
+          lastStockCheckDate: new Date(),
+        },
+      });
+
+      await tx.stockMovement.create({
+        data: {
+          productId,
+          warehouseId,
+          movementType: STOCK_MOVEMENT_TYPES.IN,
+          quantity,
+          referenceType: "OPENING_STOCK",
+          notes: "Opening stock entry",
+        },
+      });
+
+      logger.info("Opening stock added", { productId, warehouseId, quantity });
+      return inventory;
     });
-
-    logger.info('Opening stock added', { productId, warehouseId, quantity });
-    return inventory;
-  });
-},
+  },
 
   async listUnits() {
     return prisma.unitOfMeasure.findMany({
-      select:  { id: true, name: true },
+      select: { id: true, name: true },
       orderBy: { name: "asc" },
     });
   },
 
   async listCategories() {
     return prisma.category.findMany({
-      select:  { id: true, name: true },
+      select: { id: true, name: true },
       orderBy: { name: "asc" },
     });
   },

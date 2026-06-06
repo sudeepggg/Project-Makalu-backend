@@ -110,11 +110,11 @@ model Category {
 }
 
 model UnitOfMeasure {
-  id           String    @id @default(dbgenerated("uuid_generate_v4()"))
+  id           String    @id @default(cuid())
   name         String    @unique @db.VarChar(50)
   abbreviation String    @unique @db.VarChar(10)
   createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @default(now()) @updatedAt
+  updatedAt    DateTime  @updatedAt
   products     Product[]
 }
 
@@ -144,6 +144,7 @@ model Product {
   sku              String                   @unique @db.VarChar(50)
   name             String                   @db.VarChar(100)
   description      String?
+  imageUrl         String?
   categoryId       String
   unitOfMeasureId  String
   supplierId       String?
@@ -151,6 +152,7 @@ model Product {
   costPrice        Float?                   @default(0)
   reorderLevel     Int                      @default(10)
   reorderQuantity  Int                      @default(50)
+  openingStock     Int                      @default(0)
   isActive         Boolean                  @default(true)
   createdAt        DateTime                 @default(now())
   updatedAt        DateTime                 @updatedAt

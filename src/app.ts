@@ -13,6 +13,7 @@ import { productRoutes } from "./modules/product/product.routes";
 import { reportRoutes } from "./modules/report/report.routes";
 import { supplierRouter } from "./modules/supplier/supplier.routes";
 import cors from "cors";
+import path from "path";
 
 const app = express();
 
@@ -21,6 +22,8 @@ app.use(cors({ origin: env.CORS_ORIGIN }));
 app.use(express.json({ limit: env.MAX_REQUEST_SIZE }));
 app.use(express.urlencoded({ extended: true }));
 app.use(loggingMiddleware);
+
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 // API routes
 app.use("/api/v1/auth", authRoutes);

@@ -3,14 +3,31 @@ import { authMiddleware, requireRole } from "../../middleware/auth.middleware";
 import { validateRequest } from "../../middleware/validation.middleware";
 import { productController } from "./product.controller";
 import { createProductSchema, updateProductSchema } from "./product.validation";
+import { upload } from "../../middleware/upload.middleware";
 
 export const productRoutes = Router();
 
 productRoutes.use(authMiddleware);
 
+const parseFormNumbers = (req: any, _res: any, next: any) => {
+  if (req.file) req.body.imageUrl = `/uploads/products/${req.file.filename}`;
+  [
+    "basePrice",
+    "costPrice",
+    "reorderLevel",
+    "reorderQuantity",
+    "openingStock",
+  ].forEach((k) => {
+    if (req.body[k]) req.body[k] = Number(req.body[k]);
+  });
+  next();
+};
+
 productRoutes.post(
   "/",
   requireRole("ADMIN"),
+  upload.single("image"),
+  parseFormNumbers,
   validateRequest(createProductSchema),
   productController.create,
 );
@@ -21,6 +38,8 @@ productRoutes.get("/:id", productController.get);
 productRoutes.put(
   "/:id",
   requireRole("ADMIN"),
+  upload.single("image"),
+  parseFormNumbers,
   validateRequest(updateProductSchema),
   productController.update,
 );
