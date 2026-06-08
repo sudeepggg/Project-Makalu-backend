@@ -21,7 +21,12 @@ export const productRepository = {
   findMany(where: any, skip = 0, take = 20) {
     return prisma.product.findMany({
       where,
-      include: { category: true, unitOfMeasure: true, supplier: true },
+      include: {
+        category: true,
+        unitOfMeasure: true,
+        supplier: true,
+        inventories: { include: { warehouse: true } },
+      },
       skip,
       take,
       orderBy: { createdAt: "desc" },
