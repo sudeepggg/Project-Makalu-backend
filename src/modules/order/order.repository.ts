@@ -7,6 +7,7 @@ export const orderRepository = {
       include: { items: { include: { product: true } }, customer: true },
     });
   },
+
   findById(id: string) {
     return prisma.order.findUnique({
       where: { id },
@@ -17,6 +18,7 @@ export const orderRepository = {
       },
     });
   },
+
   findMany(where: any, skip = 0, take = 20) {
     return prisma.order.findMany({
       where,
@@ -26,9 +28,21 @@ export const orderRepository = {
       orderBy: { orderDate: "desc" },
     });
   },
+
   update(id: string, data: any) {
     return prisma.order.update({ where: { id }, data });
   },
+
+  delete(id: string) {
+    return prisma.order.delete({
+      where: { id },
+      include: {
+        items: true,
+        customer: true,
+      },
+    });
+  },
+
   count(where: any) {
     return prisma.order.count({ where });
   },

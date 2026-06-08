@@ -13,6 +13,19 @@ export const orderController = {
     }
   },
 
+  async update(req: AuthRequest, res: Response, next: NextFunction) {
+    try {
+      const r = await orderService.updateOrder(
+        req.params.id,
+        req.user!.id,
+        req.body
+      );
+      res.json(successResponse("Order updated", r));
+    } catch (err) {
+      next(err);
+    }
+  },
+
   async list(req: any, res: Response, next: NextFunction) {
     try {
       const page = parseInt(req.query.page) || 1;
@@ -55,6 +68,15 @@ export const orderController = {
     try {
       const r = await orderService.deliverOrder(req.params.id);
       res.json(successResponse("Order delivered", r));
+    } catch (err) {
+      next(err);
+    }
+  },
+  
+  async remove(req: AuthRequest, res: Response, next: NextFunction) {
+    try {
+      const r = await orderService.deleteOrder(req.params.id, req.user!.id);
+      res.json(successResponse("Order deleted successfully", r));
     } catch (err) {
       next(err);
     }
