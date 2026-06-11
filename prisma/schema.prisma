@@ -271,7 +271,8 @@ model CustomerProductPricing {
   id                 String            @id @default(uuid())
   customerId         String
   productId          String
-  price              Float             @default(0)
+  oldPrice           Float             @default(0)
+  newPrice           Float             @default(0)
   discountPercentage Float?            @default(0)
   effectiveDate      DateTime          @default(now())
   expiryDate         DateTime?

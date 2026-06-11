@@ -135,6 +135,7 @@ export const productService = {
     const updated = await prisma.product.update({
       where: { id },
       data: {
+        ...(input.imageUrl && { imageUrl: input.imageUrl }),
         ...(input.name && { name: input.name }),
         ...(input.description && { description: input.description }),
         ...(input.categoryId && { categoryId: input.categoryId }),

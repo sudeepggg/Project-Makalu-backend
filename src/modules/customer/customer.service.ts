@@ -78,11 +78,14 @@ export const customerService = {
       }),
       prisma.customer.count({ where }),
     ]);
+
     return {
       data,
       pagination: { page, limit, total, pages: Math.ceil(total / limit) },
     };
   },
+
+  
 
   async updateCustomer(id: string, input: any) {
     const customer = await prisma.customer.findUnique({ where: { id } });
