@@ -13,19 +13,28 @@ export const pricingController = {
     } catch (err) { next(err); }
   },
 
+  // GET /api/pricing/customer/:customerId/history
+  async getOverrideHistory(req: AuthRequest, res: Response, next: NextFunction) {
+    try {
+      const { customerId } = req.params;
+      const result = await pricingService.getOverrideHistoryByCustomer(customerId);
+      res.json(successResponse('Override history retrieved', result));
+    } catch (err) { next(err); }
+  },
+
   // POST /api/pricing/override
   async overridePrice(req: AuthRequest, res: Response, next: NextFunction) {
     try {
       const { customerId, productId, newBasePrice, newCostPrice, reason } = req.body;
       const result = await pricingService.overridePrice(
-        customerId, 
-        productId, 
-        req.user!.id, 
-        newBasePrice !== undefined ? parseFloat(newBasePrice) : undefined, 
-        newCostPrice !== undefined ? parseFloat(newCostPrice) : undefined, 
-        reason
+        customerId,
+        productId,
+        req.user!.id,
+        newBasePrice !== undefined ? parseFloat(newBasePrice) : undefined,
+        newCostPrice !== undefined ? parseFloat(newCostPrice) : undefined,
+        reason,
       );
       res.json(successResponse('Price overridden successfully', result));
     } catch (err) { next(err); }
-  }
+  },
 };

@@ -1,10 +1,10 @@
 import { prisma } from "../../config/database";
 import { NotFoundError, ValidationError } from "../../utils/errors";
 import { ORDER_STATUSES } from "../../config/constants";
-import { pricingService } from "../pricing/pricing.service";
 import { logger } from "../../utils/logger";
 import { orderRepository } from "./order.repository";
 import { UpdateOrderInput } from "./order.validation";
+import { pricingService } from "../pricing/pricing.service";
 
 export const orderService = {
   async createOrder(userId: string, payload: any) {
@@ -33,6 +33,8 @@ export const orderService = {
           productId: it.productId,
           quantity: it.quantity,
           unitPrice: priceRes.finalPrice,
+          baseUnitPrice: priceRes.basePrice, // product's original base price
+          costUnitPrice: priceRes.costPrice, // resolved cost price
           discountPercentage: discount,
           lineTotal,
         };
@@ -118,34 +120,8 @@ export const orderService = {
               productId: it.productId,
               quantity: it.quantity,
               unitPrice: priceRes.finalPrice,
-              discountPercentage: discount,
-              lineTotal,
-            },
-          });
-        }
-
-        for (const it of toCreate) {
-          const [prod, priceRes] = await Promise.all([
-            tx.product.findUnique({ where: { id: it.productId } }),
-            pricingService.calculatePrice(
-              customerId,
-              it.productId,
-              it.quantity,
-            ),
-          ]);
-          if (!prod)
-            throw new NotFoundError(`Product ${it.productId} not found`);
-
-          const discount = it.discountPercentage ?? 0;
-          const lineTotal =
-            it.quantity * priceRes.finalPrice * (1 - discount / 100);
-
-          await tx.orderItem.create({
-            data: {
-              orderId,
-              productId: it.productId,
-              quantity: it.quantity,
-              unitPrice: priceRes.finalPrice,
+              baseUnitPrice: priceRes.basePrice, // product's original base price
+              costUnitPrice: priceRes.costPrice, // resolved cost price
               discountPercentage: discount,
               lineTotal,
             },
