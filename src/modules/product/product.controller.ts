@@ -58,4 +58,12 @@ export const productController = {
       next(err);
     }
   },
+  async toggleActive(req: any, res: Response, next: NextFunction) {
+    try {
+      const r = await productService.toggleActive(req.params.id);
+      res.json(successResponse("Product active status updated", r));
+    } catch (err) {
+      next(err);
+    }
+  },
 };

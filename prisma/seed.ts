@@ -1,28 +1,28 @@
-import { prisma } from '../src/config/database';
-import bcrypt from 'bcrypt';
-import { v4 as uuid } from 'uuid';
+import { prisma } from "../src/config/database";
+import bcrypt from "bcrypt";
+import { v4 as uuid } from "uuid";
 
 async function main() {
-  console.log('🌱 Starting database seed...');
+  console.log("🌱 Starting database seed...");
 
   // Create roles
   const adminRole = await prisma.role.upsert({
-    where: { name: 'ADMIN' },
+    where: { name: "ADMIN" },
     update: {},
     create: {
       id: uuid(),
-      name: 'ADMIN',
-      description: 'Administrator with full access',
+      name: "ADMIN",
+      description: "Administrator with full access",
     },
   });
 
   const salesRole = await prisma.role.upsert({
-    where: { name: 'SALES_STAFF' },
+    where: { name: "SALES_STAFF" },
     update: {},
     create: {
       id: uuid(),
-      name: 'SALES_STAFF',
-      description: 'Sales staff with limited access',
+      name: "SALES_STAFF",
+      description: "Sales staff with limited access",
     },
   });
 
@@ -30,11 +30,11 @@ async function main() {
   const adminUser = await prisma.user.create({
     data: {
       id: uuid(),
-      username: 'admin',
-      email: 'admin@doms.local',
-      passwordHash: await bcrypt.hash('admin@123', 10),
-      firstName: 'Admin',
-      lastName: 'User',
+      username: "admin",
+      email: "admin@doms.local",
+      passwordHash: await bcrypt.hash("admin@123", 10),
+      firstName: "Admin",
+      lastName: "User",
       isActive: true,
       roles: {
         create: {
@@ -48,11 +48,11 @@ async function main() {
   const sales1 = await prisma.user.create({
     data: {
       id: uuid(),
-      username: 'sales1',
-      email: 'sales1@doms.local',
-      passwordHash: await bcrypt.hash('sales@123', 10),
-      firstName: 'Ramesh',
-      lastName: 'Patel',
+      username: "sales1",
+      email: "sales1@doms.local",
+      passwordHash: await bcrypt.hash("sales@123", 10),
+      firstName: "Ramesh",
+      lastName: "Patel",
       isActive: true,
       roles: {
         create: {
@@ -67,16 +67,16 @@ async function main() {
   const retailer = await prisma.customerType.create({
     data: {
       id: uuid(),
-      name: 'Retailer',
-      description: 'Retail stores',
+      name: "Retailer",
+      description: "Retail stores",
     },
   });
 
   const wholesaler = await prisma.customerType.create({
     data: {
       id: uuid(),
-      name: 'Wholesaler',
-      description: 'Wholesale distributors',
+      name: "Wholesaler",
+      description: "Wholesale distributors",
     },
   });
 
@@ -84,8 +84,8 @@ async function main() {
   const electronics = await prisma.category.create({
     data: {
       id: uuid(),
-      name: 'Electronics',
-      description: 'Electronic devices',
+      name: "Electronics",
+      description: "Electronic devices",
       isActive: true,
     },
   });
@@ -93,8 +93,8 @@ async function main() {
   const piece = await prisma.unitOfMeasure.create({
     data: {
       id: uuid(),
-      name: 'Piece',
-      abbreviation: 'PC',
+      name: "Piece",
+      abbreviation: "PC",
     },
   });
 
@@ -102,8 +102,8 @@ async function main() {
   const warehouse = await prisma.warehouse.create({
     data: {
       id: uuid(),
-      name: 'Main Warehouse',
-      location: 'Kathmandu',
+      name: "Main Warehouse",
+      location: "Kathmandu",
       isActive: true,
     },
   });
@@ -112,10 +112,10 @@ async function main() {
   const customer1 = await prisma.customer.create({
     data: {
       id: uuid(),
-      name: 'Kathmandu Store',
+      name: "Kathmandu Store",
       customerTypeId: retailer.id,
-      email: 'kathmandu@store.com',
-      city: 'Kathmandu',
+      email: "kathmandu@store.com",
+      city: "Kathmandu",
       creditLimit: 500000,
       isActive: true,
     },
@@ -125,10 +125,11 @@ async function main() {
   const product1 = await prisma.product.create({
     data: {
       id: uuid(),
-      sku: 'ELEC-001',
-      name: 'USB Charger 2.4A',
+      sku: "ELEC-001",
+      name: "USB Charger 2.4A",
       categoryId: electronics.id,
       unitOfMeasureId: piece.id,
+      mrpPrice: 599,
       basePrice: 599,
       costPrice: 350,
       isActive: true,
@@ -147,11 +148,11 @@ async function main() {
     },
   });
 
-  console.log('✨ Seed completed successfully!');
+  console.log("✨ Seed completed successfully!");
 }
 
 main()
-  .catch(e => {
+  .catch((e) => {
     console.error(e);
     process.exit(1);
   })

@@ -46,6 +46,12 @@ export const productRepository = {
       orderBy: { id: "asc" },
     });
   },
+  toggleActive(id: string, newState: boolean) {
+    return prisma.product.update({
+      where: { id },
+      data: { isActive: newState },
+    });
+  },
   async findAllCategories() {
     return prisma.category.findMany({
       orderBy: { id: "asc" },

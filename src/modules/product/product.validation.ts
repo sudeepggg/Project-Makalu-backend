@@ -12,8 +12,9 @@ export const createProductSchema = z.object({
     costPrice: z.number().min(0).optional(),
     reorderLevel: z.number().int().min(0).optional(),
     reorderQuantity: z.number().int().min(0).optional(),
-    imageUrl: z.string().url("Invalid image URL").optional(),
+    imageUrl: z.string().optional(),
     openingStock: z.number().int().min(0).default(0),
+    mrpPrice: z.number().min(0).optional(),
   }),
 });
 
