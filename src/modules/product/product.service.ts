@@ -101,7 +101,6 @@ export const productService = {
     }
     if (filters?.categoryId) where.categoryId = filters.categoryId;
 
-    //  query string comes as "true"/"false" string — parse to boolean
     if (filters?.isActive !== undefined) {
       where.isActive = filters.isActive === "true" || filters.isActive === true;
     }

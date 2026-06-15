@@ -120,8 +120,8 @@ export const orderService = {
               productId: it.productId,
               quantity: it.quantity,
               unitPrice: priceRes.finalPrice,
-              baseUnitPrice: priceRes.basePrice, // product's original base price
-              costUnitPrice: priceRes.costPrice, // resolved cost price
+              baseUnitPrice: priceRes.basePrice,
+              costUnitPrice: priceRes.costPrice,
               discountPercentage: discount,
               lineTotal,
             },
@@ -290,6 +290,15 @@ export const orderService = {
       where.orderDate = {};
       if (filters.dateFrom) where.orderDate.gte = new Date(filters.dateFrom);
       if (filters.dateTo) where.orderDate.lte = new Date(filters.dateTo);
+    }
+
+    if (filters?.search) {
+      where.OR = [
+        { orderNumber: { contains: filters.search, mode: "insensitive" } },
+        {
+          customer: { name: { contains: filters.search, mode: "insensitive" } },
+        },
+      ];
     }
 
     const [data, total] = await Promise.all([
