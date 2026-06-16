@@ -4082,3 +4082,237 @@
 [2026-06-14T16:19:03.793Z] [INFO] GET /api/v1/orders?page=1&limit=10 200 - 10ms 
 [2026-06-14T16:19:04.717Z] [INFO] GET /api/v1/payments 200 - 6ms 
 [2026-06-14T16:19:04.721Z] [INFO] GET /api/v1/customers 200 - 8ms 
+[2026-06-16T14:46:51.677Z] [INFO] ✅ Database connected successfully 
+[2026-06-16T14:47:21.666Z] [INFO] POST /api/v1/auth/login 200 - 918ms 
+[2026-06-16T14:47:21.871Z] [INFO] GET /api/v1/reports/sales 200 - 68ms 
+[2026-06-16T14:47:25.702Z] [INFO] GET /api/v1/customers/types 200 - 29ms 
+[2026-06-16T14:47:25.777Z] [INFO] GET /api/v1/customers?page=1 200 - 100ms 
+[2026-06-16T14:47:26.455Z] [INFO] GET /api/v1/orders?page=1&limit=10 200 - 17ms 
+[2026-06-16T14:47:29.568Z] [INFO] GET /api/v1/payments 200 - 12ms 
+[2026-06-16T14:47:29.647Z] [INFO] GET /api/v1/customers 200 - 88ms 
+[2026-06-16T14:47:30.584Z] [INFO] GET /api/v1/inventory 200 - 60ms 
+[2026-06-16T14:47:30.587Z] [INFO] GET /api/v1/inventory/alerts/low-stock 200 - 60ms 
+[2026-06-16T14:47:30.711Z] [INFO] GET /api/v1/inventory/movements 200 - 191ms 
+[2026-06-16T14:47:31.225Z] [INFO] GET /api/v1/pricing/customer//history 404 - 3ms 
+[2026-06-16T14:47:31.231Z] [INFO] GET /api/v1/pricing/customer//compare 404 - 4ms 
+[2026-06-16T14:51:17.488Z] [INFO] ✅ Database connected successfully 
+[2026-06-16T14:51:18.403Z] [INFO] ✅ Database connected successfully 
+[2026-06-16T14:51:21.331Z] [INFO] GET /api/v1/payments 200 - 106ms 
+[2026-06-16T14:51:21.427Z] [INFO] GET /api/v1/customers 200 - 189ms 
+[2026-06-16T14:51:22.575Z] [INFO] GET /api/v1/pricing/customer//compare 404 - 3ms 
+[2026-06-16T14:51:22.580Z] [INFO] GET /api/v1/pricing/customer//history 404 - 3ms 
+[2026-06-16T14:51:23.587Z] [INFO] GET /api/v1/pricing/customer//compare 404 - 3ms 
+[2026-06-16T14:51:23.603Z] [INFO] GET /api/v1/pricing/customer//history 404 - 2ms 
+[2026-06-16T14:51:25.924Z] [INFO] GET /api/v1/products/categories 200 - 55ms 
+[2026-06-16T14:51:25.928Z] [INFO] GET /api/v1/products?page=1&limit=10&debounceSearch= 200 - 54ms 
+[2026-06-16T14:51:28.359Z] [INFO] GET /api/v1/orders?page=1&limit=10 200 - 93ms 
+[2026-06-16T14:51:39.342Z] [INFO] ✅ Database connected successfully 
+[2026-06-16T14:51:44.995Z] [INFO] ✅ Database connected successfully 
+[2026-06-16T14:51:49.368Z] [INFO] ✅ Database connected successfully 
+[2026-06-16T14:51:57.410Z] [INFO] ✅ Database connected successfully 
+[2026-06-16T14:52:03.059Z] [INFO] ✅ Database connected successfully 
+[2026-06-16T14:52:39.342Z] [INFO] GET /api/v1/orders/a5150c0e-2ecb-4468-9c70-6331946f67c6 200 - 71ms 
+[2026-06-16T14:52:43.627Z] [INFO] Order confirmed {"orderId":"a5150c0e-2ecb-4468-9c70-6331946f67c6"}
+[2026-06-16T14:52:43.637Z] [INFO] POST /api/v1/orders/a5150c0e-2ecb-4468-9c70-6331946f67c6/confirm 200 - 3385ms 
+[2026-06-16T14:52:43.653Z] [INFO] GET /api/v1/orders/a5150c0e-2ecb-4468-9c70-6331946f67c6 200 - 8ms 
+[2026-06-16T14:52:55.783Z] [INFO] GET /api/v1/customers 200 - 94ms 
+[2026-06-16T14:52:55.792Z] [INFO] GET /api/v1/payments 200 - 108ms 
+[2026-06-16T14:55:13.722Z] [INFO] GET /api/v1/payments 200 - 8ms 
+[2026-06-16T14:55:13.731Z] [INFO] GET /api/v1/customers 200 - 14ms 
+[2026-06-16T15:13:48.411Z] [INFO] GET /api/v1/payments?page=1&limit=20 200 - 257ms 
+[2026-06-16T15:13:48.421Z] [INFO] GET /api/v1/customers 200 - 262ms 
+[2026-06-16T15:13:54.547Z] [INFO] GET /api/v1/payments?page=1&limit=20 200 - 9ms 
+[2026-06-16T15:13:54.556Z] [INFO] GET /api/v1/customers 200 - 15ms 
+[2026-06-16T15:14:54.830Z] [INFO] GET /api/v1/payments?page=1&limit=20 200 - 12ms 
+[2026-06-16T15:14:54.833Z] [INFO] GET /api/v1/customers 200 - 11ms 
+[2026-06-16T15:16:18.092Z] [INFO] GET /api/v1/payments?page=1&limit=20 200 - 6ms 
+[2026-06-16T15:16:18.094Z] [INFO] GET /api/v1/customers 200 - 6ms 
+[2026-06-16T15:16:37.996Z] [INFO] GET /api/v1/payments?page=1&limit=20 200 - 4ms 
+[2026-06-16T15:16:38.000Z] [INFO] GET /api/v1/customers 200 - 6ms 
+[2026-06-16T15:16:55.237Z] [INFO] GET /api/v1/customers 200 - 7ms 
+[2026-06-16T15:16:55.239Z] [INFO] GET /api/v1/payments?page=1&limit=20 200 - 5ms 
+[2026-06-16T15:17:45.867Z] [INFO] GET /api/v1/payments?page=1&limit=20 200 - 7ms 
+[2026-06-16T15:17:45.869Z] [INFO] GET /api/v1/customers 200 - 7ms 
+[2026-06-16T15:17:58.839Z] [INFO] GET /api/v1/payments?page=1&limit=20 200 - 12ms 
+[2026-06-16T15:17:58.840Z] [INFO] GET /api/v1/customers 200 - 5ms 
+[2026-06-16T15:18:58.052Z] [INFO] GET /api/v1/payments?page=1&limit=20 200 - 260ms 
+[2026-06-16T15:18:58.061Z] [INFO] GET /api/v1/customers 200 - 259ms 
+[2026-06-16T15:19:13.490Z] [INFO] GET /api/v1/payments?page=1&limit=20 200 - 8ms 
+[2026-06-16T15:19:13.500Z] [INFO] GET /api/v1/customers 200 - 15ms 
+[2026-06-16T15:19:27.739Z] [INFO] GET /api/v1/payments?page=1&limit=20 200 - 4ms 
+[2026-06-16T15:19:27.743Z] [INFO] GET /api/v1/customers 200 - 6ms 
+[2026-06-16T15:20:31.529Z] [INFO] GET /api/v1/payments?page=1&limit=20 200 - 12ms 
+[2026-06-16T15:20:31.532Z] [INFO] GET /api/v1/customers 200 - 10ms 
+[2026-06-16T15:20:32.911Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=PENDING 200 - 6ms 
+[2026-06-16T15:20:34.224Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=PENDING&customerId=88becef2-f6a4-4494-886a-82952a2e7ed9 200 - 6ms 
+[2026-06-16T15:20:35.580Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=PENDING&customerId=2fc97cf8-f000-4933-8cbc-5233d4c75a83 200 - 7ms 
+[2026-06-16T15:20:36.910Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=COMPLETED&customerId=2fc97cf8-f000-4933-8cbc-5233d4c75a83 200 - 7ms 
+[2026-06-16T15:20:38.129Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=FAILED&customerId=2fc97cf8-f000-4933-8cbc-5233d4c75a83 200 - 5ms 
+[2026-06-16T15:20:40.017Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=REFUNDED&customerId=2fc97cf8-f000-4933-8cbc-5233d4c75a83 200 - 4ms 
+[2026-06-16T15:20:44.713Z] [INFO] GET /api/v1/orders?page=1&limit=10 200 - 63ms 
+[2026-06-16T15:21:21.902Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=COMPLETED 200 - 5ms 
+[2026-06-16T15:21:23.387Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=COMPLETED&customerId=88becef2-f6a4-4494-886a-82952a2e7ed9 200 - 4ms 
+[2026-06-16T15:25:33.732Z] [INFO] GET /api/v1/customers 200 - 92ms 
+[2026-06-16T15:25:35.613Z] [INFO] GET /api/v1/customers 200 - 8ms 
+[2026-06-16T15:25:35.618Z] [INFO] GET /api/v1/payments?page=1&limit=20 200 - 10ms 
+[2026-06-16T15:25:37.336Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=COMPLETED 200 - 5ms 
+[2026-06-16T15:25:38.410Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=COMPLETED&customerId=88becef2-f6a4-4494-886a-82952a2e7ed9 200 - 8ms 
+[2026-06-16T15:25:39.544Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=COMPLETED&customerId=2fc97cf8-f000-4933-8cbc-5233d4c75a83 200 - 6ms 
+[2026-06-16T15:27:07.617Z] [INFO] GET /api/v1/payments?page=1&limit=20 200 - 9ms 
+[2026-06-16T15:27:07.622Z] [INFO] GET /api/v1/customers 200 - 11ms 
+[2026-06-16T15:27:09.028Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=PENDING 200 - 4ms 
+[2026-06-16T15:27:09.813Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=PENDING&customerId=88becef2-f6a4-4494-886a-82952a2e7ed9 200 - 5ms 
+[2026-06-16T15:27:11.199Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=COMPLETED&customerId=88becef2-f6a4-4494-886a-82952a2e7ed9 200 - 3ms 
+[2026-06-16T15:27:15.049Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=COMPLETED&customerId=2fc97cf8-f000-4933-8cbc-5233d4c75a83 200 - 3ms 
+[2026-06-16T15:27:20.108Z] [INFO] GET /api/v1/orders?page=1&limit=10 200 - 11ms 
+[2026-06-16T15:27:21.667Z] [INFO] GET /api/v1/products 200 - 67ms 
+[2026-06-16T15:27:23.461Z] [INFO] GET /api/v1/orders/a5150c0e-2ecb-4468-9c70-6331946f67c6 200 - 7ms 
+[2026-06-16T15:27:24.203Z] [INFO] Order dispatched {"orderId":"a5150c0e-2ecb-4468-9c70-6331946f67c6"}
+[2026-06-16T15:27:24.207Z] [INFO] POST /api/v1/orders/a5150c0e-2ecb-4468-9c70-6331946f67c6/dispatch 200 - 61ms 
+[2026-06-16T15:27:24.230Z] [INFO] GET /api/v1/orders/a5150c0e-2ecb-4468-9c70-6331946f67c6 200 - 9ms 
+[2026-06-16T15:27:28.123Z] [INFO] GET /api/v1/payments?page=1&limit=20&customerId=88becef2-f6a4-4494-886a-82952a2e7ed9 200 - 4ms 
+[2026-06-16T15:27:30.777Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=REFUNDED&customerId=88becef2-f6a4-4494-886a-82952a2e7ed9 200 - 4ms 
+[2026-06-16T15:27:31.999Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=FAILED&customerId=88becef2-f6a4-4494-886a-82952a2e7ed9 200 - 6ms 
+[2026-06-16T15:27:34.032Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=FAILED&customerId=2fc97cf8-f000-4933-8cbc-5233d4c75a83 200 - 4ms 
+[2026-06-16T15:30:38.695Z] [INFO] ✅ Database connected successfully 
+[2026-06-16T15:30:42.114Z] [INFO] GET /api/v1/payments?page=1&limit=20 200 - 92ms 
+[2026-06-16T15:30:42.267Z] [INFO] GET /api/v1/customers 200 - 230ms 
+[2026-06-16T15:30:45.622Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=COMPLETED 200 - 8ms 
+[2026-06-16T15:30:47.701Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=COMPLETED&customerId=2fc97cf8-f000-4933-8cbc-5233d4c75a83 200 - 6ms 
+[2026-06-16T15:35:08.162Z] [INFO] ✅ Database connected successfully 
+[2026-06-16T15:35:11.813Z] [INFO] ✅ Database connected successfully 
+[2026-06-16T15:35:23.063Z] [INFO] ✅ Database connected successfully 
+[2026-06-16T15:38:14.112Z] [INFO] ✅ Database connected successfully 
+[2026-06-16T15:38:15.374Z] [INFO] ✅ Database connected successfully 
+[2026-06-16T15:38:37.129Z] [INFO] ✅ Database connected successfully 
+[2026-06-16T15:38:40.107Z] [INFO] ✅ Database connected successfully 
+[2026-06-16T15:39:19.576Z] [INFO] ✅ Database connected successfully 
+[2026-06-16T15:39:24.213Z] [INFO] ✅ Database connected successfully 
+[2026-06-16T15:39:29.589Z] [INFO] ✅ Database connected successfully 
+[2026-06-16T15:39:40.456Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=COMPLETED&customerId=2fc97cf8-f000-4933-8cbc-5233d4c75a83 200 - 127ms 
+[2026-06-16T15:39:40.459Z] [INFO] GET /api/v1/customers 200 - 142ms 
+[2026-06-16T15:39:42.499Z] [INFO] GET /api/v1/payments?page=1&limit=20 200 - 9ms 
+[2026-06-16T15:39:42.503Z] [INFO] GET /api/v1/customers 200 - 18ms 
+[2026-06-16T15:39:44.421Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=PENDING 200 - 8ms 
+[2026-06-16T15:39:45.341Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=PENDING&customerId=88becef2-f6a4-4494-886a-82952a2e7ed9 200 - 10ms 
+[2026-06-16T15:39:46.614Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=PENDING&customerId=2fc97cf8-f000-4933-8cbc-5233d4c75a83 200 - 10ms 
+[2026-06-16T15:39:51.711Z] [INFO] GET /api/v1/orders?page=1&limit=10 200 - 91ms 
+[2026-06-16T15:39:53.956Z] [INFO] GET /api/v1/orders/a5150c0e-2ecb-4468-9c70-6331946f67c6 200 - 130ms 
+[2026-06-16T15:39:57.443Z] [INFO] GET /api/v1/orders?page=1&limit=10 200 - 38ms 
+[2026-06-16T15:40:47.926Z] [INFO] GET /api/v1/customers 200 - 7ms 
+[2026-06-16T15:40:47.971Z] [INFO] GET /api/v1/products 200 - 49ms 
+[2026-06-16T15:40:53.783Z] [INFO] Order and automatic payment generated successfully {"orderId":"1fe9e2c7-c531-43b6-b14e-af8b73eaeca4"}
+[2026-06-16T15:40:53.786Z] [INFO] POST /api/v1/orders 201 - 606ms 
+[2026-06-16T15:40:53.811Z] [INFO] GET /api/v1/orders?page=1&limit=10 200 - 11ms 
+[2026-06-16T15:40:56.499Z] [INFO] GET /api/v1/payments?page=1&limit=20 200 - 12ms 
+[2026-06-16T15:40:59.398Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=PENDING 200 - 5ms 
+[2026-06-16T15:41:01.326Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=PENDING&customerId=2fc97cf8-f000-4933-8cbc-5233d4c75a83 200 - 5ms 
+[2026-06-16T15:41:11.011Z] [INFO] GET /api/v1/orders/1fe9e2c7-c531-43b6-b14e-af8b73eaeca4 200 - 22ms 
+[2026-06-16T15:41:19.406Z] [INFO] Order and automatic payment generated successfully {"orderId":"d35e0425-3714-4aa6-bff2-b79f31cce6de"}
+[2026-06-16T15:41:19.424Z] [INFO] POST /api/v1/orders 201 - 43ms 
+[2026-06-16T15:41:19.482Z] [INFO] GET /api/v1/orders?page=1&limit=10 200 - 19ms 
+[2026-06-16T15:41:24.023Z] [INFO] GET /api/v1/orders/d35e0425-3714-4aa6-bff2-b79f31cce6de 200 - 8ms 
+[2026-06-16T15:41:24.840Z] [INFO] POST /api/v1/orders/d35e0425-3714-4aa6-bff2-b79f31cce6de/dispatch 400 - 148ms 
+[2026-06-16T15:41:26.256Z] [INFO] POST /api/v1/orders/d35e0425-3714-4aa6-bff2-b79f31cce6de/dispatch 400 - 10ms 
+[2026-06-16T15:41:32.366Z] [INFO] GET /api/v1/inventory 200 - 12ms 
+[2026-06-16T15:41:32.370Z] [INFO] GET /api/v1/inventory/alerts/low-stock 200 - 8ms 
+[2026-06-16T15:41:32.376Z] [INFO] GET /api/v1/inventory/movements 200 - 18ms 
+[2026-06-16T15:41:41.009Z] [INFO] ✅ Database connected successfully 
+[2026-06-16T15:41:42.632Z] [INFO] ✅ Database connected successfully 
+[2026-06-16T15:41:54.980Z] [INFO] ✅ Database connected successfully 
+[2026-06-16T15:42:00.375Z] [INFO] GET /api/v1/inventory 200 - 34ms 
+[2026-06-16T15:42:00.465Z] [INFO] GET /api/v1/inventory/movements 200 - 117ms 
+[2026-06-16T15:42:00.469Z] [INFO] GET /api/v1/inventory/alerts/low-stock 200 - 117ms 
+[2026-06-16T15:42:00.819Z] [INFO] GET /api/v1/orders?page=1&limit=10 200 - 32ms 
+[2026-06-16T15:42:01.793Z] [INFO] GET /api/v1/customers 200 - 17ms 
+[2026-06-16T15:42:01.908Z] [INFO] GET /api/v1/products 200 - 125ms 
+[2026-06-16T15:42:05.225Z] [INFO] Order created {"orderId":"33362325-9775-4bc2-b3f2-0bbcec7fdeaa"}
+[2026-06-16T15:42:05.226Z] [INFO] POST /api/v1/orders 201 - 86ms 
+[2026-06-16T15:42:05.254Z] [INFO] GET /api/v1/orders?page=1&limit=10 200 - 18ms 
+[2026-06-16T15:42:07.164Z] [INFO] GET /api/v1/orders/33362325-9775-4bc2-b3f2-0bbcec7fdeaa 200 - 13ms 
+[2026-06-16T15:42:08.185Z] [INFO] Order confirmed {"orderId":"33362325-9775-4bc2-b3f2-0bbcec7fdeaa"}
+[2026-06-16T15:42:08.190Z] [INFO] POST /api/v1/orders/33362325-9775-4bc2-b3f2-0bbcec7fdeaa/confirm 200 - 52ms 
+[2026-06-16T15:42:08.206Z] [INFO] GET /api/v1/orders/33362325-9775-4bc2-b3f2-0bbcec7fdeaa 200 - 8ms 
+[2026-06-16T15:42:09.763Z] [INFO] Order dispatched {"orderId":"33362325-9775-4bc2-b3f2-0bbcec7fdeaa"}
+[2026-06-16T15:42:09.767Z] [INFO] POST /api/v1/orders/33362325-9775-4bc2-b3f2-0bbcec7fdeaa/dispatch 200 - 103ms 
+[2026-06-16T15:42:09.776Z] [INFO] GET /api/v1/orders/33362325-9775-4bc2-b3f2-0bbcec7fdeaa 200 - 5ms 
+[2026-06-16T15:42:11.567Z] [INFO] Order delivered {"orderId":"33362325-9775-4bc2-b3f2-0bbcec7fdeaa"}
+[2026-06-16T15:42:11.571Z] [INFO] POST /api/v1/orders/33362325-9775-4bc2-b3f2-0bbcec7fdeaa/deliver 200 - 27ms 
+[2026-06-16T15:42:11.581Z] [INFO] GET /api/v1/orders/33362325-9775-4bc2-b3f2-0bbcec7fdeaa 200 - 5ms 
+[2026-06-16T15:42:24.451Z] [INFO] GET /api/v1/payments?page=1&limit=20 200 - 13ms 
+[2026-06-16T15:42:41.690Z] [INFO] GET /api/v1/payments?page=1&limit=20&customerId=88becef2-f6a4-4494-886a-82952a2e7ed9 200 - 5ms 
+[2026-06-16T15:42:43.734Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=PENDING&customerId=88becef2-f6a4-4494-886a-82952a2e7ed9 200 - 4ms 
+[2026-06-16T15:42:45.991Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=COMPLETED&customerId=88becef2-f6a4-4494-886a-82952a2e7ed9 200 - 4ms 
+[2026-06-16T15:42:47.936Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=COMPLETED&customerId=2fc97cf8-f000-4933-8cbc-5233d4c75a83 200 - 5ms 
+[2026-06-16T16:16:29.192Z] [INFO] GET /api/v1/payments?page=1&limit=20&status=COMPLETED&customerId=2fc97cf8-f000-4933-8cbc-5233d4c75a83 200 - 235ms 
+[2026-06-16T16:16:29.211Z] [INFO] GET /api/v1/customers 200 - 250ms 
+[2026-06-16T16:26:22.144Z] [INFO] GET /api/v1/customers 200 - 76ms 
+[2026-06-16T16:26:22.156Z] [INFO] GET /api/v1/payments?page=1&limit=20 200 - 91ms 
+[2026-06-16T16:28:20.865Z] [INFO] GET /api/v1/customers 200 - 4ms 
+[2026-06-16T16:28:20.874Z] [INFO] GET /api/v1/payments?page=1&limit=20 200 - 15ms 
+[2026-06-16T16:28:25.170Z] [INFO] GET /api/v1/payments/f6383fc8-430a-4c66-81fe-190f382aeee5 200 - 23ms 
+[2026-06-16T16:28:29.830Z] [INFO] GET /api/v1/payments?page=1&limit=20&customerId=88becef2-f6a4-4494-886a-82952a2e7ed9 200 - 9ms 
+[2026-06-16T16:28:35.341Z] [INFO] GET /api/v1/customers/88becef2-f6a4-4494-886a-82952a2e7ed9/active-orders 404 - 3ms 
+[2026-06-16T16:28:36.356Z] [INFO] GET /api/v1/customers/88becef2-f6a4-4494-886a-82952a2e7ed9/active-orders 404 - 4ms 
+[2026-06-16T16:28:40.637Z] [INFO] GET /api/v1/customers/2fc97cf8-f000-4933-8cbc-5233d4c75a83/active-orders 404 - 2ms 
+[2026-06-16T16:28:41.649Z] [INFO] GET /api/v1/customers/2fc97cf8-f000-4933-8cbc-5233d4c75a83/active-orders 404 - 5ms 
+[2026-06-16T16:28:42.751Z] [INFO] GET /api/v1/inventory/movements 200 - 161ms 
+[2026-06-16T16:28:42.761Z] [INFO] GET /api/v1/inventory/alerts/low-stock 200 - 167ms 
+[2026-06-16T16:28:42.765Z] [INFO] GET /api/v1/inventory 200 - 181ms 
+[2026-06-16T16:28:42.985Z] [INFO] GET /api/v1/products?page=1&limit=10&debounceSearch= 200 - 9ms 
+[2026-06-16T16:28:43.008Z] [INFO] GET /api/v1/products/categories 200 - 34ms 
+[2026-06-16T16:28:44.314Z] [INFO] GET /api/v1/products/46b031c8-992d-4e5e-afc3-3d58aa72de42 200 - 8ms 
+[2026-06-16T16:28:47.440Z] [INFO] GET /api/v1/orders?page=1&limit=10 200 - 7ms 
+[2026-06-16T16:28:48.597Z] [INFO] GET /api/v1/orders/d35e0425-3714-4aa6-bff2-b79f31cce6de 200 - 6ms 
+[2026-06-16T16:28:50.270Z] [INFO] POST /api/v1/orders/d35e0425-3714-4aa6-bff2-b79f31cce6de/dispatch 400 - 78ms 
+[2026-06-16T16:28:57.388Z] [INFO] GET /api/v1/customers/88becef2-f6a4-4494-886a-82952a2e7ed9/active-orders 404 - 2ms 
+[2026-06-16T16:28:58.401Z] [INFO] GET /api/v1/customers/88becef2-f6a4-4494-886a-82952a2e7ed9/active-orders 404 - 5ms 
+[2026-06-16T16:29:00.692Z] [INFO] GET /api/v1/customers/2fc97cf8-f000-4933-8cbc-5233d4c75a83/active-orders 404 - 3ms 
+[2026-06-16T16:29:01.714Z] [INFO] GET /api/v1/customers/2fc97cf8-f000-4933-8cbc-5233d4c75a83/active-orders 404 - 4ms 
+[2026-06-16T16:39:17.198Z] [INFO] GET /api/v1/customers 200 - 84ms 
+[2026-06-16T16:39:17.208Z] [INFO] GET /api/v1/payments?page=1&limit=20 200 - 101ms 
+[2026-06-16T16:39:22.894Z] [INFO] GET /api/v1/orders?page=1&limit=10 200 - 22ms 
+[2026-06-16T16:39:26.538Z] [INFO] GET /api/v1/orders/33362325-9775-4bc2-b3f2-0bbcec7fdeaa 200 - 11ms 
+[2026-06-16T16:57:55.814Z] [INFO] GET /api/v1/orders/33362325-9775-4bc2-b3f2-0bbcec7fdeaa 200 - 181ms 
+[2026-06-16T16:58:31.252Z] [INFO] GET /api/v1/orders?page=1&limit=10 200 - 63ms 
+[2026-06-16T16:58:33.310Z] [INFO] GET /api/v1/orders/d35e0425-3714-4aa6-bff2-b79f31cce6de 200 - 16ms 
+[2026-06-16T16:58:38.136Z] [INFO] GET /api/v1/customers 200 - 9ms 
+[2026-06-16T16:58:38.297Z] [INFO] GET /api/v1/products 200 - 167ms 
+[2026-06-16T17:03:16.626Z] [INFO] GET /api/v1/orders/33362325-9775-4bc2-b3f2-0bbcec7fdeaa 200 - 19ms 
+[2026-06-16T17:03:19.745Z] [INFO] GET /api/v1/pricing/customer//compare 404 - 3ms 
+[2026-06-16T17:03:19.752Z] [INFO] GET /api/v1/pricing/customer//history 404 - 5ms 
+[2026-06-16T17:03:20.756Z] [INFO] GET /api/v1/pricing/customer//compare 404 - 2ms 
+[2026-06-16T17:03:20.761Z] [INFO] GET /api/v1/pricing/customer//history 404 - 2ms 
+[2026-06-16T17:03:22.309Z] [INFO] GET /api/v1/payments?page=1&limit=20 200 - 7ms 
+[2026-06-16T17:03:24.568Z] [INFO] GET /api/v1/payments/24d34d03-a611-438b-b16e-987298b57f7f 200 - 7ms 
+[2026-06-16T17:03:26.961Z] [INFO] GET /api/v1/payments/f6383fc8-430a-4c66-81fe-190f382aeee5 200 - 7ms 
+[2026-06-16T17:03:36.416Z] [INFO] GET /api/v1/payments?page=1&limit=20 200 - 102ms 
+[2026-06-16T17:03:36.436Z] [INFO] GET /api/v1/customers 200 - 120ms 
+[2026-06-16T17:04:18.734Z] [INFO] GET /api/v1/payments/f6383fc8-430a-4c66-81fe-190f382aeee5 200 - 18ms 
+[2026-06-16T17:04:22.881Z] [INFO] GET /api/v1/suppliers?page=1&limit=20 304 - 46ms 
+[2026-06-16T17:04:23.338Z] [INFO] GET /api/v1/reports/inventory 200 - 16ms 
+[2026-06-16T17:04:23.339Z] [INFO] GET /api/v1/reports/sales 200 - 20ms 
+[2026-06-16T17:04:23.351Z] [INFO] GET /api/v1/reports/kpis 200 - 35ms 
+[2026-06-16T17:04:26.173Z] [INFO] GET /api/v1/reports/sales 200 - 4ms 
+[2026-06-16T17:04:57.052Z] [INFO] GET /api/v1/products/categories 200 - 10ms 
+[2026-06-16T17:04:57.059Z] [INFO] GET /api/v1/products?page=1&limit=10&debounceSearch= 200 - 14ms 
+[2026-06-16T17:04:57.788Z] [INFO] GET /api/v1/inventory 200 - 10ms 
+[2026-06-16T17:04:57.790Z] [INFO] GET /api/v1/inventory/alerts/low-stock 200 - 9ms 
+[2026-06-16T17:04:57.800Z] [INFO] GET /api/v1/inventory/movements 200 - 16ms 
+[2026-06-16T17:04:59.633Z] [INFO] GET /api/v1/pricing/customer//compare 404 - 2ms 
+[2026-06-16T17:04:59.636Z] [INFO] GET /api/v1/pricing/customer//history 404 - 2ms 
+[2026-06-16T17:05:05.804Z] [INFO] GET /api/v1/pricing/customer//compare 404 - 3ms 
+[2026-06-16T17:05:05.809Z] [INFO] GET /api/v1/pricing/customer//history 404 - 4ms 
+[2026-06-16T17:05:06.814Z] [INFO] GET /api/v1/pricing/customer//compare 404 - 3ms 
+[2026-06-16T17:05:06.822Z] [INFO] GET /api/v1/pricing/customer//history 404 - 4ms 
+[2026-06-16T17:05:07.879Z] [INFO] GET /api/v1/pricing/customer//compare 404 - 3ms 
+[2026-06-16T17:05:07.883Z] [INFO] GET /api/v1/pricing/customer//history 404 - 3ms 
+[2026-06-16T17:05:24.501Z] [INFO] GET /api/v1/customers/types 200 - 10ms 
+[2026-06-16T17:05:24.509Z] [INFO] GET /api/v1/customers?page=1 200 - 15ms 
+[2026-06-16T17:05:25.444Z] [INFO] GET /api/v1/orders?page=1&limit=10 200 - 12ms 
+[2026-06-16T17:05:27.917Z] [INFO] GET /api/v1/pricing/customer//compare 404 - 4ms 
+[2026-06-16T17:05:27.924Z] [INFO] GET /api/v1/pricing/customer//history 404 - 5ms 
+[2026-06-16T17:05:28.421Z] [INFO] GET /api/v1/inventory 200 - 5ms 
+[2026-06-16T17:05:28.424Z] [INFO] GET /api/v1/inventory/movements 200 - 6ms 
+[2026-06-16T17:05:57.760Z] [INFO] GET /api/v1/pricing/customer//compare 404 - 2ms 
+[2026-06-16T17:05:57.764Z] [INFO] GET /api/v1/pricing/customer//history 404 - 3ms 

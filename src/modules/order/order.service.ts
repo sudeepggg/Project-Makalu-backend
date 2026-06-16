@@ -87,7 +87,6 @@ export const orderService = {
       if (payload.items && payload.items.length > 0) {
         const toDelete = payload.items.filter((it) => it._delete && it.id);
         const toUpdate = payload.items.filter((it) => !it._delete && it.id);
-        const toCreate = payload.items.filter((it) => !it._delete && !it.id);
 
         if (toDelete.length > 0) {
           await tx.orderItem.deleteMany({
