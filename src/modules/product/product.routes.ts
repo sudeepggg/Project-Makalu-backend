@@ -11,6 +11,7 @@ productRoutes.use(authMiddleware);
 
 const parseFormNumbers = (req: any, _res: any, next: any) => {
   if (req.file) req.body.imageUrl = `/uploads/products/${req.file.filename}`;
+
   [
     "basePrice",
     "costPrice",
@@ -18,15 +19,16 @@ const parseFormNumbers = (req: any, _res: any, next: any) => {
     "reorderQuantity",
     "openingStock",
   ].forEach((k) => {
-    if (req.body[k]) req.body[k] = Number(req.body[k]);
+    if (req.body[k] !== undefined) req.body[k] = Number(req.body[k]);
   });
+
   next();
 };
 
 productRoutes.post(
   "/",
   requireRole("ADMIN"),
-  upload.single("image"),
+  upload.single("imageUrl"),
   parseFormNumbers,
   validateRequest(createProductSchema),
   productController.create,
@@ -35,10 +37,11 @@ productRoutes.get("/", productController.list);
 productRoutes.get("/units", productController.listTypes);
 productRoutes.get("/categories", productController.listCategory);
 productRoutes.get("/:id", productController.get);
+productRoutes.patch("/:id/toggle-active", productController.toggleActive);
 productRoutes.put(
   "/:id",
   requireRole("ADMIN"),
-  upload.single("image"),
+  upload.single("imageUrl"),
   parseFormNumbers,
   validateRequest(updateProductSchema),
   productController.update,

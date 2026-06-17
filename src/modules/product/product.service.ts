@@ -42,6 +42,7 @@ export const productService = {
           categoryId: input.categoryId,
           unitOfMeasureId: input.unitOfMeasureId,
           supplierId: input.supplierId,
+          mrpPrice: input.mrpPrice ?? input.basePrice,
           costPrice: input.costPrice ?? 0,
           basePrice: input.basePrice ?? 0,
           reorderLevel: input.reorderLevel ?? 0,
@@ -100,7 +101,6 @@ export const productService = {
     }
     if (filters?.categoryId) where.categoryId = filters.categoryId;
 
-    //  query string comes as "true"/"false" string — parse to boolean
     if (filters?.isActive !== undefined) {
       where.isActive = filters.isActive === "true" || filters.isActive === true;
     }
@@ -135,6 +135,7 @@ export const productService = {
     const updated = await prisma.product.update({
       where: { id },
       data: {
+        ...(input.imageUrl !== undefined && { imageUrl: input.imageUrl }),
         ...(input.name && { name: input.name }),
         ...(input.description && { description: input.description }),
         ...(input.categoryId && { categoryId: input.categoryId }),
@@ -143,6 +144,8 @@ export const productService = {
         }),
         ...(input.supplierId && { supplierId: input.supplierId }),
         ...(input.costPrice !== undefined && { costPrice: input.costPrice }),
+        ...(input.basePrice !== undefined && { basePrice: input.basePrice }),
+        ...(input.basePrice !== undefined && { mrpPrice: input.basePrice }),
         ...(input.reorderLevel !== undefined && {
           reorderLevel: input.reorderLevel,
         }),
@@ -154,29 +157,14 @@ export const productService = {
     return updated;
   },
 
-  //  Added — soft delete
-  async deactivateProduct(id: string) {
+  async toggleActive(id: string) {
     const product = await prisma.product.findUnique({ where: { id } });
     if (!product) throw new NotFoundError("Product not found");
-    if (!product.isActive)
-      throw new ValidationError("Product already inactive");
-
-    return prisma.product.update({
+    const updated = await prisma.product.update({
       where: { id },
-      data: { isActive: false, updatedAt: new Date() },
+      data: { isActive: !product.isActive },
     });
-  },
-
-  //  Added — reactivate
-  async reactivateProduct(id: string) {
-    const product = await prisma.product.findUnique({ where: { id } });
-    if (!product) throw new NotFoundError("Product not found");
-    if (product.isActive) throw new ValidationError("Product already active");
-
-    return prisma.product.update({
-      where: { id },
-      data: { isActive: true, updatedAt: new Date() },
-    });
+    return updated;
   },
 
   // In productService — add this method

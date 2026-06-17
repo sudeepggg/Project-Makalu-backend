@@ -148,6 +148,7 @@ model Product {
   categoryId       String
   unitOfMeasureId  String
   supplierId       String?
+  mrpPrice         Float?                   @default(0)
   basePrice        Float                    @default(0)
   costPrice        Float?                   @default(0)
   reorderLevel     Int                      @default(10)
@@ -271,7 +272,8 @@ model CustomerProductPricing {
   id                 String            @id @default(uuid())
   customerId         String
   productId          String
-  price              Float             @default(0)
+  baseprice          Float             @default(0)
+  costPrice          Float             @default(0)
   discountPercentage Float?            @default(0)
   effectiveDate      DateTime          @default(now())
   expiryDate         DateTime?
@@ -309,6 +311,10 @@ model PricingHistory {
   customerId         String
   productId          String
   price              Float
+  oldCost            Float
+  newCost            Float
+  oldBase            Float
+  newBase            Float
   discountPercentage Float?
   pricingRuleType    String   @db.VarChar(50)
   pricingRuleId      String?
@@ -355,6 +361,8 @@ model OrderItem {
   productId          String
   quantity           Int
   unitPrice          Float
+  baseUnitPrice      Float
+  costUnitPrice      Float
   discountPercentage Float?   @default(0)
   lineTotal          Float    @default(0)
   createdAt          DateTime @default(now())

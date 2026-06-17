@@ -66,8 +66,12 @@ export const customerService = {
         { email: { contains: filters.search, mode: "insensitive" } },
       ];
     if (filters?.customerTypeId) where.customerTypeId = filters.customerTypeId;
-    if (filters?.isActive !== undefined) where.isActive = filters.isActive;
-
+    if (filters?.isActive !== undefined) {
+      where.isActive = filters.isActive === "true" || filters.isActive === true;
+    }
+    if (filters?.city) {
+      where.city = { contains: filters.city, mode: "insensitive" };
+    }
     const [data, total] = await Promise.all([
       prisma.customer.findMany({
         where,
@@ -78,6 +82,7 @@ export const customerService = {
       }),
       prisma.customer.count({ where }),
     ]);
+
     return {
       data,
       pagination: { page, limit, total, pages: Math.ceil(total / limit) },
