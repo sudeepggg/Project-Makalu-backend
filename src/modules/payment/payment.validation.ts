@@ -10,3 +10,10 @@ export const recordPaymentSchema = z.object({
     notes: z.string().optional(),
   }),
 });
+
+export const verifyPaymentSchema = z.object({
+  body: z.object({
+    status: z.enum(['COMPLETED', 'FAILED']),
+    verifyNote: z.string().optional(),
+  }),
+});

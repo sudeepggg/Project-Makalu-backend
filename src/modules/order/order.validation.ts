@@ -1,7 +1,5 @@
 import { z } from "zod";
 
-// ─── Reusable ────────────────────────────────────────────────────────────────
-
 const uuidField = z.string().uuid();
 
 const orderItemSchema = z.object({
@@ -18,7 +16,6 @@ const orderItemUpdateSchema = z.object({
   _delete: z.boolean().optional(),
 });
 
-// ─── Create ──────────────────────────────────────────────────────────────────
 
 export const createOrderSchema = z.object({
   body: z.object({
@@ -34,8 +31,6 @@ export const createOrderSchema = z.object({
     }),
   }),
 });
-
-// ─── Update ──────────────────────────────────────────────────────────────────
 
 export const updateOrderSchema = z.object({
   params: z.object({
@@ -57,8 +52,6 @@ export const updateOrderSchema = z.object({
     }),
 });
 
-// ─── Confirm / Transition ─────────────────────────────────────────────────────
-
 export const confirmOrderSchema = z.object({
   params: z.object({
     id: uuidField,
@@ -77,8 +70,6 @@ export const deleteOrderSchema = z.object({
     id: uuidField,
   }),
 });
-
-// ─── Types ───────────────────────────────────────────────────────────────────
 
 export type CreateOrderInput = z.infer<typeof createOrderSchema>["body"];
 export type UpdateOrderInput = z.infer<typeof updateOrderSchema>["body"];
