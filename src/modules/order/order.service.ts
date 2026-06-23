@@ -1,6 +1,6 @@
 import { prisma } from "../../config/database";
 import { NotFoundError, ValidationError } from "../../utils/errors";
-import { ORDER_STATUSES } from "../../config/constants";
+import { ORDER_STATUSES, PAYMENT_STATUSES } from "../../config/constants";
 import { logger } from "../../utils/logger";
 import { orderRepository } from "./order.repository";
 import { UpdateOrderInput } from "./order.validation";
@@ -290,7 +290,6 @@ export const orderService = {
       if (filters.dateFrom) where.orderDate.gte = new Date(filters.dateFrom);
       if (filters.dateTo) where.orderDate.lte = new Date(filters.dateTo);
     }
-
     if (filters?.search) {
       where.OR = [
         { orderNumber: { contains: filters.search, mode: "insensitive" } },
@@ -305,8 +304,36 @@ export const orderService = {
       orderRepository.count(where),
     ]);
 
+    // Fetch completed payments for all orders in this page in one query
+    const orderIds = data.map((o) => o.id);
+    const payments = await prisma.payment.findMany({
+      where: {
+        orderId: { in: orderIds },
+        status: PAYMENT_STATUSES.COMPLETED,
+      },
+      select: { orderId: true, amount: true },
+    });
+
+    // Group total paid per order
+    const paidByOrder = payments.reduce<Record<string, number>>((acc, p) => {
+      acc[p.orderId] = (acc[p.orderId] ?? 0) + p.amount;
+      return acc;
+    }, {});
+
+    const dataWithPaymentStatus = data.map((order) => {
+      const totalPaid = paidByOrder[order.id] ?? 0;
+      const paymentStatus =
+        totalPaid <= 0
+          ? "UNPAID"
+          : totalPaid < order.total
+            ? "PARTIALLY_PAID"
+            : "PAID";
+
+      return { ...order, totalPaid, paymentStatus };
+    });
+
     return {
-      data,
+      data: dataWithPaymentStatus,
       pagination: { page, limit, total, pages: Math.ceil(total / limit) },
     };
   },

@@ -18,7 +18,7 @@ export const orderController = {
       const r = await orderService.updateOrder(
         req.params.id,
         req.user!.id,
-        req.body
+        req.body,
       );
       res.json(successResponse("Order updated", r));
     } catch (err) {
@@ -72,7 +72,17 @@ export const orderController = {
       next(err);
     }
   },
-  
+
+  // async getActiveOrders(req: AuthRequest, res: Response, next: NextFunction) {
+  //   try {
+  //     const { customerId } = req.params;
+  //     const r = await orderService.getActiveOrdersByCustomer(customerId);
+  //     res.json(successResponse("Active orders", r));
+  //   } catch (err) {
+  //     next(err);
+  //   }
+  // },
+
   async remove(req: AuthRequest, res: Response, next: NextFunction) {
     try {
       const r = await orderService.deleteOrder(req.params.id, req.user!.id);
