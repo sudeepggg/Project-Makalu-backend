@@ -1,73 +1,161 @@
-import { prisma } from '../../config/database';
-import { NotFoundError, ValidationError } from '../../utils/errors';
-import { logger } from '../../utils/logger';
+import { prisma } from "../../config/database";
+import { NotFoundError, ValidationError } from "../../utils/errors";
+import { pricingRepository } from "./pricing.repository";
 
 export const pricingService = {
-  // returns final price result including applied rule
-  async calculatePrice(customerId: string, productId: string, quantity = 1) {
-    const customer = await prisma.customer.findUnique({ where: { id: customerId } });
-    if (!customer) throw new NotFoundError('Customer not found');
-
-    const product = await prisma.product.findUnique({ where: { id: productId } });
-    if (!product) throw new NotFoundError('Product not found');
-
-    const now = new Date();
-
-    // 1. customer-specific
-    const cPricing = await prisma.customerProductPricing.findUnique({ where: { customerId_productId: { customerId, productId } } });
-    if (cPricing && cPricing.isActive && (!cPricing.expiryDate || cPricing.expiryDate > now)) {
-      const discount = cPricing.discountPercentage || 0;
-      const final = cPricing.price * (1 - discount / 100);
-      await prisma.pricingHistory.create({ data: { customerId, productId, price: cPricing.price, discountPercentage: discount, pricingRuleType: 'CUSTOMER_SPECIFIC', pricingRuleId: cPricing.id } });
-      return { price: cPricing.price, discountPercentage: discount, finalPrice: final, rule: 'CUSTOMER_SPECIFIC' };
-    }
-
-    // 2. promotional price lists mapped to customer
-    const mappings = await prisma.priceListCustomer.findMany({ where: { customerId }, include: { priceList: { include: { items: true } } } });
-    const activePLs = mappings.map(m => m.priceList).filter(pl => pl.isActive && pl.effectiveDate <= now && (!pl.expiryDate || pl.expiryDate > now)).sort((a,b)=>b.priority-a.priority);
-    for (const pl of activePLs) {
-      const item = pl.items.find(i => i.productId === productId);
-      if (item) {
-        const discount = item.discountPercentage || 0;
-        const final = item.price * (1 - discount / 100);
-        await prisma.pricingHistory.create({ data: { customerId, productId, price: item.price, discountPercentage: discount, pricingRuleType: 'PROMOTIONAL', pricingRuleId: pl.id } });
-        return { price: item.price, discountPercentage: discount, finalPrice: final, rule: 'PROMOTIONAL' };
-      }
-    }
-
-    // 3. customer-type / base fallback: use product.basePrice
-    const base = product.basePrice;
-    await prisma.pricingHistory.create({ data: { customerId, productId, price: base, pricingRuleType: 'BASE', pricingRuleId: product.id } });
-    return { price: base, discountPercentage: 0, finalPrice: base, rule: 'BASE' };
-  },
-
-  async setCustomerPrice(customerId: string, productId: string, price: number, discountPercentage?: number, expiryDate?: string) {
-    if (price < 0) throw new ValidationError('Price invalid');
-    const upsert = await prisma.customerProductPricing.upsert({
-      where: { customerId_productId: { customerId, productId } },
-      update: { price, discountPercentage, expiryDate: expiryDate ? new Date(expiryDate) : null, isActive: true },
-      create: { customerId, productId, price, discountPercentage: discountPercentage ?? 0, effectiveDate: new Date(), expiryDate: expiryDate ? new Date(expiryDate) : null, isActive: true },
+  async getCustomerPriceComparisonList(customerId: string) {
+    const customer = await prisma.customer.findUnique({
+      where: { id: customerId },
     });
-    return upsert;
+    if (!customer) throw new NotFoundError("Customer not found");
+
+    const products = await prisma.product.findMany({
+      where: { isActive: true },
+    });
+
+    const results = [];
+    for (const product of products) {
+      const cPricing = await pricingRepository.findCustomerProductPricing(
+        customerId,
+        product.id,
+      );
+
+      results.push({
+        productId: product.id,
+        productName: product.name,
+        sku: product.sku,
+
+        originalBasePrice: product.basePrice,
+        overrideBasePrice: cPricing?.baseprice ?? null,
+        basePriceDiff:
+          cPricing?.baseprice != null
+            ? cPricing.baseprice - product.basePrice
+            : 0,
+
+        originalCostPrice: product.costPrice ?? 0,
+        overrideCostPrice: cPricing?.costPrice ?? null,
+        costPriceDiff:
+          cPricing?.costPrice != null
+            ? cPricing.costPrice - (product.costPrice ?? 0)
+            : 0,
+
+        customerProductPricingId: cPricing?.id ?? null,
+      });
+    }
+
+    return results;
   },
 
-  async overridePrice(customerId: string, productId: string, userId: string, newPrice: number, reason?: string) {
-    const pricing = await prisma.customerProductPricing.findUnique({ where: { customerId_productId: { customerId, productId } } });
-    if (!pricing) throw new NotFoundError('Customer pricing not found');
-    const old = pricing.price;
-    const updated = await prisma.customerProductPricing.update({ where: { id: pricing.id }, data: { price: newPrice } });
-    const override = await prisma.pricingOverride.create({ data: { customerProductPricingId: pricing.id, userId, oldPrice: old, newPrice, reason } });
-    return { updated, override };
+  async getOverrideHistoryByCustomer(customerId: string) {
+    const customer = await prisma.customer.findUnique({
+      where: { id: customerId },
+    });
+    if (!customer) throw new NotFoundError("Customer not found");
+
+    const history =
+      await pricingRepository.findOverrideHistoryByCustomer(customerId);
+
+    return history.map((entry) => ({
+      overrideId: entry.id,
+      product: entry.customerProductPricing.product,
+      overriddenBy: entry.user,
+      oldPrice: entry.oldPrice,
+      newPrice: entry.newPrice,
+      reason: entry.reason,
+      createdAt: entry.createdAt,
+    }));
   },
 
-  async createPriceList(data: any) {
-    const pl = await prisma.priceList.create({ data: { name: data.name, description: data.description, effectiveDate: new Date(data.effectiveDate || Date.now()), expiryDate: data.expiryDate ? new Date(data.expiryDate) : null, priority: data.priority || 0, items: { create: data.items } } , include: { items: true } });
-    return pl;
+  async overridePrice(
+    customerId: string,
+    productId: string,
+    userId: string,
+    newBasePrice?: number,
+    newCostPrice?: number,
+    reason?: string,
+  ) {
+    if (newBasePrice === undefined && newCostPrice === undefined) {
+      throw new ValidationError("Must provide at least one price to override.");
+    }
+
+    const product = await prisma.product.findUnique({
+      where: { id: productId },
+    });
+    if (!product) throw new NotFoundError("Product not found");
+
+    return await prisma.$transaction(async (tx) => {
+      const existing = await tx.customerProductPricing.findUnique({
+        where: { customerId_productId: { customerId, productId } },
+      });
+
+      // baseprice = lowercase p per schema
+      const oldBase = existing?.baseprice ?? product.basePrice;
+      const oldCost = existing?.costPrice ?? product.costPrice ?? 0;
+
+      const updated = await tx.customerProductPricing.upsert({
+        where: { customerId_productId: { customerId, productId } },
+        create: {
+          customerId,
+          productId,
+          baseprice: newBasePrice ?? product.basePrice, // required field, fall back to product
+          costPrice: newCostPrice ?? product.costPrice ?? 0,
+          effectiveDate: new Date(),
+          isActive: true,
+        },
+        update: {
+          ...(newBasePrice !== undefined && { baseprice: newBasePrice }),
+          ...(newCostPrice !== undefined && { costPrice: newCostPrice }),
+        },
+      });
+
+      // PricingOverride schema only has oldPrice/newPrice — store base price change.
+      // Cost price change is appended to reason for traceability without a migration.
+      const costNote =
+        newCostPrice !== undefined
+          ? ` | Cost: ${oldCost} → ${newCostPrice}`
+          : "";
+
+      const overrideLog = await tx.pricingOverride.create({
+        data: {
+          customerProductPricingId: updated.id,
+          userId,
+          oldPrice: oldBase,
+          newPrice: newBasePrice ?? oldBase,
+          reason: `${reason ?? "Price modification update"}${costNote}`,
+        },
+      });
+
+      return { updated, override: overrideLog };
+    });
   },
+  // Add this to pricingService in pricing.service.ts
 
-  async getActivePriceLists() { return prisma.priceList.findMany({ where: { isActive: true }, include: { items: { include: { product: true } }, customerMappings: { include: { customer: true } } }, orderBy: { priority: 'desc' } }); },
+  async calculatePrice(
+    customerId: string,
+    productId: string,
+    quantity: number,
+  ) {
+    const product = await prisma.product.findUnique({
+      where: { id: productId },
+    });
+    if (!product) throw new NotFoundError("Product not found");
 
-  async getPricingHistory(customerId: string, productId: string, limit = 100) {
-    return prisma.pricingHistory.findMany({ where: { customerId, productId }, orderBy: { appliedDate: 'desc' }, take: limit });
+    const cPricing = await pricingRepository.findCustomerProductPricing(
+      customerId,
+      productId,
+    );
+
+    // Use customer override base price if exists, otherwise fall back to product base price
+    const finalPrice = cPricing?.baseprice ?? product.basePrice;
+    const costPrice = cPricing?.costPrice ?? product.costPrice ?? 0;
+
+    return {
+      finalPrice,
+      costPrice,
+      basePrice: product.basePrice,
+      overridePrice: cPricing?.baseprice ?? null,
+      quantity,
+      lineTotal: finalPrice * quantity,
+    };
   },
 };

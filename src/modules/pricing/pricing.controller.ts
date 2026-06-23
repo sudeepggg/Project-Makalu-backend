@@ -4,49 +4,37 @@ import { successResponse } from '../../utils/response';
 import { AuthRequest } from '../../middleware/auth.middleware';
 
 export const pricingController = {
-  async calculatePrice(req: AuthRequest, res: Response, next: NextFunction) {
+  // GET /api/pricing/customer/:customerId/compare
+  async getComparisonList(req: AuthRequest, res: Response, next: NextFunction) {
     try {
-      const { customerId, productId, quantity } = req.query;
-      const result = await pricingService.calculatePrice(customerId as string, productId as string, quantity ? parseInt(quantity as string) : 1);
-      res.json(successResponse('Price calculated', result));
+      const { customerId } = req.params;
+      const result = await pricingService.getCustomerPriceComparisonList(customerId);
+      res.json(successResponse('Customer pricing comparison list retrieved', result));
     } catch (err) { next(err); }
   },
 
-  async setCustomerPrice(req: AuthRequest, res: Response, next: NextFunction) {
+  // GET /api/pricing/customer/:customerId/history
+  async getOverrideHistory(req: AuthRequest, res: Response, next: NextFunction) {
     try {
-      const { customerId, productId, price, discountPercentage, expiryDate } = req.body;
-      const result = await pricingService.setCustomerPrice(customerId, productId, price, discountPercentage, expiryDate);
-      res.json(successResponse('Customer price set', result));
+      const { customerId } = req.params;
+      const result = await pricingService.getOverrideHistoryByCustomer(customerId);
+      res.json(successResponse('Override history retrieved', result));
     } catch (err) { next(err); }
   },
 
+  // POST /api/pricing/override
   async overridePrice(req: AuthRequest, res: Response, next: NextFunction) {
     try {
-      const { customerId, productId, newPrice, reason } = req.body;
-      const result = await pricingService.overridePrice(customerId, productId, req.user!.id, newPrice, reason);
-      res.json(successResponse('Price overridden', result));
-    } catch (err) { next(err); }
-  },
-
-  async createPriceList(req: AuthRequest, res: Response, next: NextFunction) {
-    try {
-      const result = await pricingService.createPriceList(req.body);
-      res.status(201).json(successResponse('Price list created', result));
-    } catch (err) { next(err); }
-  },
-
-  async getActivePriceLists(_req: AuthRequest, res: Response, next: NextFunction) {
-    try {
-      const result = await pricingService.getActivePriceLists();
-      res.json(successResponse('Active price lists', result));
-    } catch (err) { next(err); }
-  },
-
-  async getPricingHistory(req: AuthRequest, res: Response, next: NextFunction) {
-    try {
-      const { customerId, productId, limit } = req.query;
-      const result = await pricingService.getPricingHistory(customerId as string, productId as string, limit ? parseInt(limit as string) : 100);
-      res.json(successResponse('Pricing history', result));
+      const { customerId, productId, newBasePrice, newCostPrice, reason } = req.body;
+      const result = await pricingService.overridePrice(
+        customerId,
+        productId,
+        req.user!.id,
+        newBasePrice !== undefined ? parseFloat(newBasePrice) : undefined,
+        newCostPrice !== undefined ? parseFloat(newCostPrice) : undefined,
+        reason,
+      );
+      res.json(successResponse('Price overridden successfully', result));
     } catch (err) { next(err); }
   },
 };

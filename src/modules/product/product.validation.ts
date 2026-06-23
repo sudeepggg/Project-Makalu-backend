@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const createProductSchema = z.object({
   body: z.object({
@@ -12,7 +12,12 @@ export const createProductSchema = z.object({
     costPrice: z.number().min(0).optional(),
     reorderLevel: z.number().int().min(0).optional(),
     reorderQuantity: z.number().int().min(0).optional(),
+    imageUrl: z.string().optional(),
+    openingStock: z.number().int().min(0).default(0),
+    mrpPrice: z.number().min(0).optional(),
   }),
 });
 
-export const updateProductSchema = z.object({ body: createProductSchema.shape.body.partial() });
+export const updateProductSchema = z.object({
+  body: createProductSchema.shape.body.partial(),
+});
