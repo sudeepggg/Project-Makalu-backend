@@ -11,15 +11,6 @@ export const paymentController = {
     } catch (err) { next(err); }
   },
 
-  async verify(req: AuthRequest, res: Response, next: NextFunction) {
-    try {
-      const { id } = req.params;
-      const { status, verifyNote } = req.body;
-      const r = await paymentService.verifyPayment(id, status, verifyNote);
-      res.json(successResponse('Payment verified', r));
-    } catch (err) { next(err); }
-  },
-
   async get(req: AuthRequest, res: Response, next: NextFunction) {
     try {
       const r = await paymentService.getPayment(req.params.id);

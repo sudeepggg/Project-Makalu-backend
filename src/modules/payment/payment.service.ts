@@ -22,117 +22,81 @@ export const paymentService = {
     });
     if (!customer) throw new NotFoundError("Customer not found");
 
-    const orders = await prisma.order.findMany({
+    // ── Outstanding balance scoped to this specific order only ──────────────
+    const orderPaymentsExisting = await prisma.payment.findMany({
       where: {
-        customerId: input.customerId,
-        status: { in: [ORDER_STATUSES.CONFIRMED, ORDER_STATUSES.DELIVERED] },
-      },
-      select: { total: true },
-    });
-
-    const existingPayments = await prisma.payment.findMany({
-      where: {
-        customerId: input.customerId,
+        orderId: input.orderId,
         status: PAYMENT_STATUSES.COMPLETED,
       },
       select: { amount: true },
     });
 
-    const totalOrdered = orders.reduce((s, o) => s + o.total, 0);
-    const totalPaid = existingPayments.reduce((s, p) => s + p.amount, 0);
-    const outstanding = totalOrdered - totalPaid;
+    const totalPaidForOrder = orderPaymentsExisting.reduce(
+      (s, p) => s + p.amount,
+      0,
+    );
+    const outstanding = order.total - totalPaidForOrder;
+
+    if (outstanding <= 0) {
+      throw new ValidationError("This order is already fully paid");
+    }
 
     if (input.amount > outstanding) {
       throw new ValidationError(
-        `Payment amount (${input.amount}) exceeds outstanding balance (${outstanding})`,
+        `Payment amount (${input.amount}) exceeds outstanding balance (${outstanding}) for this order`,
       );
     }
 
-    // Save as PENDING — credit update happens only on verification
-    const payment = await prisma.payment.create({
-      data: { ...input, status: PAYMENT_STATUSES.PENDING },
-      // include: { order: true, customer: true },
-    });
-
-    logger.info("Payment recorded", { paymentId: payment.id });
-    return payment;
-  },
-
-  async verifyPayment(id: string, status: string, notes?: string) {
-    if (
-      ![PAYMENT_STATUSES.COMPLETED, PAYMENT_STATUSES.FAILED].includes(
-        status as any,
-      )
-    ) {
-      throw new ValidationError("Status must be COMPLETED or FAILED");
-    }
-
-    const payment = await paymentRepository.findById(id);
-    if (!payment) throw new NotFoundError("Payment not found");
-    if (payment.status !== PAYMENT_STATUSES.PENDING) {
-      throw new ValidationError("Only PENDING payments can be verified");
-    }
-
-    await prisma.$transaction(async (tx) => {
-      await tx.payment.update({
-        where: { id },
-        data: { status, notes },
+    return await prisma.$transaction(async (tx) => {
+      const payment = await tx.payment.create({
+        data: { ...input, status: PAYMENT_STATUSES.COMPLETED },
       });
 
-      if (status === PAYMENT_STATUSES.COMPLETED) {
-        const orders = await tx.order.findMany({
+      // ── Update customer creditUsed based on all their orders/payments ──────
+      const [allOrders, allPayments] = await Promise.all([
+        tx.order.findMany({
           where: {
-            customerId: payment.customerId,
+            customerId: input.customerId,
             status: {
-              in: [ORDER_STATUSES.CONFIRMED, ORDER_STATUSES.DELIVERED],
+              in: [
+                ORDER_STATUSES.CONFIRMED,
+                ORDER_STATUSES.DISPATCHED,
+                ORDER_STATUSES.DELIVERED,
+                ORDER_STATUSES.PAID,
+              ],
             },
           },
           select: { total: true },
-        });
-
-        const completedPayments = await tx.payment.findMany({
+        }),
+        tx.payment.findMany({
           where: {
-            customerId: payment.customerId,
+            customerId: input.customerId,
             status: PAYMENT_STATUSES.COMPLETED,
           },
           select: { amount: true },
+        }),
+      ]);
+
+      const totalOrdered = allOrders.reduce((s, o) => s + o.total, 0);
+      const totalPaidAll = allPayments.reduce((s, p) => s + p.amount, 0);
+
+      await tx.customer.update({
+        where: { id: input.customerId },
+        data: { creditUsed: Math.max(0, totalOrdered - totalPaidAll) },
+      });
+
+      // ── Mark order as PAID if fully settled ─────────────────────────────
+      const newOrderTotalPaid = totalPaidForOrder + input.amount;
+      if (newOrderTotalPaid >= order.total) {
+        await tx.order.update({
+          where: { id: input.orderId },
+          data: { status: ORDER_STATUSES.PAID },
         });
-
-        const totalOrdered = orders.reduce((s, o) => s + o.total, 0);
-        const totalPaid =
-          completedPayments.reduce((s, p) => s + p.amount, 0) + payment.amount;
-
-        await tx.customer.update({
-          where: { id: payment.customerId },
-          data: { creditUsed: totalOrdered - totalPaid },
-        });
-
-        const orderPayments = await tx.payment.findMany({
-          where: {
-            orderId: payment.orderId,
-            status: PAYMENT_STATUSES.COMPLETED,
-          },
-          select: { amount: true },
-        });
-
-        const orderTotalPaid =
-          orderPayments.reduce((s, p) => s + p.amount, 0) + payment.amount;
-        const relatedOrder = await tx.order.findUnique({
-          where: { id: payment.orderId },
-          select: { total: true },
-        });
-
-        if (relatedOrder && orderTotalPaid >= relatedOrder.total) {
-          await tx.order.update({
-            where: { id: payment.orderId },
-            data: { status: ORDER_STATUSES.PAID },
-          });
-        }
       }
-    });
 
-    logger.info("Payment verified", { paymentId: id, status });
-    return paymentRepository.findById(id);
+      logger.info("Payment recorded", { paymentId: payment.id });
+      return payment;
+    });
   },
 
   async getPayment(id: string) {
@@ -141,11 +105,17 @@ export const paymentService = {
     return p;
   },
 
-  // payment.service.ts
   async listPayments(page = 1, limit = 20, filters?: any) {
     const skip = (page - 1) * limit;
     const where: any = {
-      status: { in: [ORDER_STATUSES.CONFIRMED, ORDER_STATUSES.DELIVERED] },
+      status: {
+        in: [
+          ORDER_STATUSES.CONFIRMED,
+          ORDER_STATUSES.DISPATCHED,
+          ORDER_STATUSES.DELIVERED,
+          ORDER_STATUSES.PAID,
+        ],
+      },
     };
     if (filters?.customerId) where.customerId = filters.customerId;
 
@@ -185,7 +155,6 @@ export const paymentService = {
       };
     });
 
-    // filter by paymentStatus if requested
     const filtered = filters?.paymentStatus
       ? data.filter((d) => d.paymentStatus === filters.paymentStatus)
       : data;
